@@ -1,12 +1,14 @@
 package com.apiconnection.diegoarmando.api_connection.Business;
 
 public class News {
+    private int id;
     private String title;
     private String description;
     private String date;
     private boolean approved;
 
-    public News(String title, String description, String date, boolean approved) {
+    public News(int id, String title, String description, String date, boolean approved) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.date = date;
@@ -47,4 +49,8 @@ public class News {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
+    public int getId() {return id; }
+
+
 }

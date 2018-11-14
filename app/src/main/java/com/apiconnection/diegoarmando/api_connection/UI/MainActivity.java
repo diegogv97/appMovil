@@ -78,15 +78,15 @@ public class MainActivity extends AppCompatActivity {
             JSONArray jsonNewsList  = jsonResult.getJSONArray("news");       //Importante
             for (int i = 0; i < jsonNewsList.length(); i++) {
                 JSONObject jsonNews = (JSONObject) jsonNewsList.get(i);
+                int id = jsonNews.getInt("id");
                 String title = jsonNews.getString("title");
-    
                 String description = jsonNews.getString("description");
                 String date = jsonNews.getString("date");
                 boolean approved = jsonNews.getBoolean("approved");
-                News n = new News(title, description, date, approved);
+                News n = new News(id, title, description, date, approved);
                 listsNews.add(n);
             }
-            News n = new News("","","",false);
+            News n = new News(-1, "","","",false);
             listsNews.add(n);
             NewsAdapter adapter = new NewsAdapter();
             lvNews.setAdapter(adapter);
@@ -186,6 +186,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
+    public class ExecuteDeleteNews extends AsyncTask<String, Void, String> {
+        boolean isOk = false;
+        int id;
+
+        ExecuteDeleteNews(){
+
+        }
+
+    public ExecuteDeleteNews(int id) {
+        this.id = id;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+
+    }
+
+    @Override
+    protected String doInBackground(String... strings) {
+        NewsService api = NewsService.getInstance();
+
+        String[] keys = {"id"};
+        String[] values = {String.valueOf(id)};
+        isOk = api.deleteNews(keys,values,0);
+
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+
+        if (isOk) {
+
+            String msj = "Difusion eliminada";
+            Toast.makeText(MainActivity.this, msj, Toast.LENGTH_SHORT).show();
+
+            MainActivity.ExecuteGetNews executeGetNews = new MainActivity.ExecuteGetNews();
+            executeGetNews.execute();
+
+
+        } else {
+            String msj = "Error al eliminar la difusiones";
+            Toast.makeText(MainActivity.this, msj, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
     public class NewsAdapter extends BaseAdapter {
 
         public NewsAdapter() {
@@ -225,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
             News n = listsNews.get(i);
 
+            final int id = n.getId();
             String sTitle = n.getTitle();
             String sDescription = n.getDescription();
             String sDate = n.getDate();
@@ -235,18 +288,34 @@ public class MainActivity extends AppCompatActivity {
             date.setText(sDate);
             approved.setChecked(bApproved);
 
-            save.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity.ExecuteCreateNews executeCreateNews = new MainActivity.ExecuteCreateNews(title.getText().toString(), description.getText().toString(), date.getText().toString(),approved.isChecked());
-                    executeCreateNews.execute();
-                }
-            });
+
+            if(i == listsNews.size()-1){   //es el ultimo
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.ExecuteCreateNews executeCreateNews = new MainActivity.ExecuteCreateNews(title.getText().toString(), description.getText().toString(), date.getText().toString(),approved.isChecked());
+                        executeCreateNews.execute();
+                    }
+                });
+            }
+            else{
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity.ExecuteCreateNews executeCreateNews = new MainActivity.ExecuteCreateNews(title.getText().toString(), description.getText().toString(), date.getText().toString(),approved.isChecked());
+                        MainActivity.ExecuteDeleteNews executeDeleteNews = new MainActivity.ExecuteDeleteNews(id);
+                        executeCreateNews.execute();
+                        executeDeleteNews.execute();
+                    }
+                });
+            }
+
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "deleting", Toast.LENGTH_SHORT).show();
+                    MainActivity.ExecuteDeleteNews executeDeleteNews = new MainActivity.ExecuteDeleteNews(id);
+                    executeDeleteNews.execute();
                 }
             });
 

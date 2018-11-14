@@ -1,5 +1,7 @@
 package com.apiconnection.diegoarmando.api_connection.Services;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +62,21 @@ public class NewsService {
         return makePOSTRequest("create", "POST", true, true, Parameters, responses[expectedResponse]);
     }
 
+    public boolean deleteNews(String[] keys, String[] values, int expectedResponse){
+        jsonObjectResponse = new JSONObject();
+
+        String urlComp = "";
+        int size = keys.length;
+        for(int i = 0; i < size; i++){
+            if(i > 0){
+                urlComp += "&";
+            }
+            urlComp += keys[i] + "=" + values[i];
+        }
+
+        String urlEsp = "delete_news" + "?" + urlComp;
+        return makeDELETERequest(urlEsp, "DELETE", responses[expectedResponse]);
+    }
 
     // Solicitud para GETs
     //devolver_en= 0:JsonObjectResponse; 1:JsonObjectResponseNotifs; 2:JsonObjectResponseAmigos
@@ -202,6 +219,34 @@ public class NewsService {
         return result.toString();
     }
 
+    // Solicitud para DELETEs
+    private boolean makeDELETERequest(String urlEsp, String metodo, int responseCode){
+        URL url;
+        HttpsURLConnection httpsURLConnection;
+
+        try {
+            url = new URL(url_base + urlEsp);
+            httpsURLConnection = (HttpsURLConnection) url.openConnection();
+            httpsURLConnection.setReadTimeout(15000);
+            httpsURLConnection.setConnectTimeout(15000);
+            httpsURLConnection.setRequestMethod("DELETE");
+            httpsURLConnection.setDoOutput(false);
+            httpsURLConnection.setDoInput(true);
+            httpsURLConnection.connect();
+
+            int r = httpsURLConnection.getResponseCode();
+            String rm = httpsURLConnection.getContent().toString();
+            String rC = Integer.toString(httpsURLConnection.getResponseCode());
+            if(r==200){
+                return true;
+            } else{
+                Log.e("httpsURLConnection", rm);
+            }
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+    }
     public JSONObject getJsonObjectResponse(){
         return jsonObjectResponse;
     }
