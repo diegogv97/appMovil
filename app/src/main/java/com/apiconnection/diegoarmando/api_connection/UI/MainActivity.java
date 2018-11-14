@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < jsonNewsList.length(); i++) {
                 JSONObject jsonNews = (JSONObject) jsonNewsList.get(i);
                 String title = jsonNews.getString("title");
-                String hola;
+    
                 String description = jsonNews.getString("description");
                 String date = jsonNews.getString("date");
                 boolean approved = jsonNews.getBoolean("approved");
