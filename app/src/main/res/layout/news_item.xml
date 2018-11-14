@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/title"
+            android:layout_width="144dp"
+            android:layout_height="54dp"
+            android:clickable="true"
+            android:editable="true"
+            android:enabled="true"
+            android:text="TextView"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/description"
+            android:layout_width="175dp"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:editable="true"
+            android:enabled="true"
+            android:text="TextView"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/date"
+            android:layout_width="153dp"
+            android:layout_height="54dp"
+            android:clickable="true"
+            android:editable="true"
+            android:enabled="true"
+            android:text="TextView"
+            android:textSize="12sp" />
+
+        <Switch
+            android:id="@+id/approved"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:checked="true"
+            android:cursorVisible="false"
+            android:enabled="true"
+            android:text="Aprobado" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginBottom="20dp">
+
+
+        <TextView
+            android:id="@+id/action"
+            android:layout_width="139dp"
+            android:layout_height="35dp"
+            android:text="Acción"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="Eliminar" />
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guardar" />
+    </TableRow>
+
+</TableLayout>
